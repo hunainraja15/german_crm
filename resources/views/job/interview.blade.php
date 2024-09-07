@@ -36,6 +36,7 @@
                         <tbody>
                             @foreach ($interviews as $interview)
                                 <tr>
+                                    
                                     <td>{{ $interview->id }}</td>
                                     <td>{{ $interview->interview_type }}</td>
                                     <td>{{ $interview->interview_date }}</td>
@@ -45,7 +46,18 @@
                                     @if (Auth::user()->role == 'Admin')
                                         <td>{{ $interview->status }}</td>
                                     @else
-                                        <td>
+                                        <td >
+                                            @if ($interview->status == 'approve')
+                                               
+                                            
+                                            {{-- <form action="{{ route('upload.interview',$interview ) }}" class="form" method="POST" enctype="multipart/form-data" id="uploadForm">
+                                                @csrf
+                                                <label for="interview" class="btn btn-primary btn-sm">Upload interview</label>
+                                                <input type="file" id="interview" hidden>
+                                                <input type="text" name="email" value="{{$interview->application->user->email}}"  hidden>
+                                                <input type="text" name="id" value="{{$interview->application->user->id}}"  hidden>
+                                            </form> --}}
+                                            @endif
                                             <form action="{{ route('job.interview.status') }}" method="POST" id="actionForm">
                                                 @csrf
                                                 <input type="hidden" name="interview_status_id"
@@ -149,6 +161,10 @@
     </div>
 
 
-
+    <script>
+        document.getElementById('interview').addEventListener('change', function() {
+            document.getElementById('uploadForm').submit();
+        });
+    </script>
     
 @endsection

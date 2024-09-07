@@ -63,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/offer/creation', [NewJobController::class, 'offer_creation'])->name('job.offer.creation');
         Route::post('/offer/update', [NewJobController::class, 'offer_update'])->name('job.offer.update');
         Route::get('/interview/pdf/{interview}', [NewJobController::class, 'interview_pdf'])->name('interview.pdf');
+        Route::post('/upload/interview{interview}', [NewJobController::class, 'upload_interview'])->name('upload.interview');
         
     });
     

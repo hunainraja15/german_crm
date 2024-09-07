@@ -317,9 +317,9 @@ return view('job.application', compact('applications'));
     //
     public function job_interview()
     {
-        $interviews = Interview::get();
+        $interviews = Interview::with('application.user')->get();
 
-        
+
 return view('job.interview', compact('interviews'));
 
     }
@@ -539,5 +539,27 @@ public function interview_pdf($interview)
     );
 }
 
+    public function upload_interview(Request $request ,$interview){
+        dd($interview);
+        $client = Interview::find($interview);
+        $response = $client->post('https://api.hireflix.com/interview', [
+            'headers' => [
+                'Authorization' => 'Bearer YOUR_API_TOKEN',
+            ],
+            'json' => [
+                'query' => '
+                    mutation {
+                        Position(id:'.$request->id.') {
+                            invite(email: '.$request->email.') {
+                                success
+                                message
+                            }
+                        }
+                    }
+                ',
+            ],
+        ]);
+
+    }
  
 }

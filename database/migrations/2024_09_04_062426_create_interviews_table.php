@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('interview_time_start')->nullable();
             $table->text('interview_time_end')->nullable();
             $table->text('duration')->nullable();
+            $table->text('interview_video')->nullable();
             $table->text('special_request')->nullable();
             $table->string('status')->default('panding');
             $table->string('signature')->default(false);
