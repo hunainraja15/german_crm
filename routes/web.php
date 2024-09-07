@@ -6,7 +6,6 @@ use App\Http\Controllers\NewJobController;
 use App\Http\Controllers\VisaController;
 
 
-
 Auth::routes();
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
