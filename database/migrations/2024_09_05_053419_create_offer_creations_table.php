@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('benefits')->nullable();
             $table->text('contractual_terms')->nullable();
             $table->text('signature')->nullable();
+            $table->text('employer_signature')->nullable();
             $table->foreignId('interview_id')->constrained()->nullable();
             $table->timestamps();
         });

@@ -36,7 +36,7 @@
                                 <td>{{ $job->salary_range }}</td>
                                 <td>{{ $job->application_deadline }}</td>
                                 <td>{{ $job->visibility }}</td>
-                                @if (Auth::user()->role == 'User')
+                                @if (Auth::user()->role == 'User' ||  Auth::user()->role == 'Employer' )
                                 <td>
                                     <a class="h3 btn btn-primary d-flex" href="{{ route('job.apply', $job) }}">Apply<i class='bx bx-user-pin'></i></a>
                                 </td>

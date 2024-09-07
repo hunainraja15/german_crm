@@ -36,12 +36,18 @@
                                     <td>{{ @$interview->offerCreation->benefits }}</td>
                                     <td>{{ @$interview->offerCreation->contractual_terms }}</td>
                                     <td>
+                                        {{-- @if ( Auth::user()->role != 'Employer') --}}
+                                            
+                                        
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                             <i class="bx bx-edit"></i>
                                         </a>
+                                        {{-- @endif --}}
+                                        @if ($interview->offerCreation)
                                         <a href="{{route('interview.pdf', $interview)}}">
                                             <i class='bx bxs-file-pdf'></i>
                                         </a>
+                                        @endif
                                     </td>
                                 </tr>
 
@@ -55,6 +61,7 @@
                                           </div>
                                           <form action="{{ route('job.offer.update') }}" method="POST" class="form" enctype="multipart/form-data">
                                               @csrf
+                                              
                                               <input type="hidden" name="interview_id" value="{{ $interview->id }}">
                                               <div class="modal-body">
                                                   <div class="row mb-2">
@@ -106,6 +113,9 @@
                                                 </div>  
 
                                                   <div class="row">
+                                                    <label for="sig-canvas" class="mt-3 mb-2">
+                                                        Signature (submit after viewing)
+                                                      </label>
                                                     <div class="col-md-12">
                                                         <canvas id="sig-canvas" class="border border-primary" height="160">
                                                             Get a better browser, bro.
@@ -119,8 +129,13 @@
                                                 
                                                     <textarea id="sig-dataUrl" class="form-control d-none" rows="5" readonly>Data URL for your signature will go here!</textarea>
                                             
+                                                    @if(Auth::user()->role == 'Employer' )
+                                                    <!-- Hidden file input -->
+                                                    <input type="file" id="sig-file" name="employer_signature" style="display: none;" />
+                                                    @else
                                                     <!-- Hidden file input -->
                                                     <input type="file" id="sig-file" name="signature" style="display: none;" />
+                                                    @endif
                                             
                                                     <!-- Button to view signature -->
                                                     <button type="button" id="view-signature-btn" class="btn btn-primary mt-2">View Signature</button>
@@ -129,9 +144,6 @@
                                             
                                                 <img id="sig-image" class="mt-2" alt="Your signature will appear here" style="display: none;" />
                                             
-                        
-
-
                                               </div>
                                               <div class="modal-footer">
                                                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

@@ -403,7 +403,30 @@ return view('job.interview', compact('interviews'));
 
     public function offer_update(Request $request)
     {
+
 // dd($request->all());
+if(Auth::user()->role == 'Employer'){
+$uniqueId = uniqid();
+    $timestamp = time();
+
+    // Store signature if available
+    if ($request->hasFile('employer_signature')) {
+        $employer_signaturePath = $request->file('employer_signature')->storeAs(
+            'public/employer_signatures',
+            $uniqueId . '_' . $timestamp . '.' . $request->file('employer_signature')->getClientOriginalExtension()
+        );
+    }
+// dd($employer_signaturePath);
+    // Check if the offer already exists
+    $offer = OfferCreation::updateOrCreate(
+        ['interview_id' => $request->input('interview_id')],
+        [
+            'employer_signature' => $employer_signaturePath,
+        ]
+    );
+
+    return redirect()->back()->with('success', 'signature submit successfully!');
+}
        // Validate incoming request data
     $validator = Validator::make($request->all(), [
         'salary' => 'required|numeric|min:0',
@@ -445,6 +468,9 @@ return view('job.interview', compact('interviews'));
 }
 
 private function base64EncodeImage($path) {
+    if (!file_exists($path)) {
+        return null; // or return a placeholder image
+    }
     $imageData = file_get_contents($path);
     $base64 = base64_encode($imageData);
     return 'data:image/png;base64,' . $base64;
@@ -468,9 +494,13 @@ public function interview_pdf($interview)
         return redirect()->back()->with('error', 'Interview not found.');
     }
 
-    // Convert the signature image to Base64
+    // Convert the interview signature image to Base64
     $signaturePath = storage_path('app/' . $interview->offerCreation->signature);
     $signatureBase64 = $this->base64EncodeImage($signaturePath);
+    
+    // Handle the optional employer signature from the offer_creation table
+    $employerSignaturePath = $interview->offerCreation->employer_signature ? storage_path('app/' . $interview->offerCreation->employer_signature) : null;
+    $employer_signatureBase64 = $this->base64EncodeImage($employerSignaturePath);
 
     // Prepare the data for the PDF
     $data = [
@@ -480,6 +510,7 @@ public function interview_pdf($interview)
         'benefits' => $interview->offerCreation->benefits,
         'contractual_terms' => $interview->offerCreation->contractual_terms,
         'signature' => $signatureBase64, // Use Base64 encoded image
+        'employer_signature' => $employer_signatureBase64, // Use Base64 encoded image or null
         'company_name' => 'Your Company Name',
     ];
 
@@ -506,5 +537,7 @@ public function interview_pdf($interview)
             'Content-Disposition' => 'attachment; filename="' . $pdfName . '"',
         ]
     );
-}    
+}
+
+ 
 }

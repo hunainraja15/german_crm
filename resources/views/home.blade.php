@@ -183,7 +183,7 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if (Auth::user()->role == 'User')
+                                @if (Auth::user()->role == 'User' ||  Auth::user()->role == 'Employer' )
                                     <li class="menu-item {{ Route::is('profile.create') ? 'active' : '' }}">
                                         <a href="{{ route('profile.create') }}" class="menu-link">
                                             <div data-i18n="Without navbar">Create Profile</div>
@@ -205,7 +205,7 @@
                             $profile = Profile::where('user_id', Auth::user()->id)->first();
                         @endphp
 
-                        @if (Auth::user()->role == 'Admin' || (Auth::user()->role == 'User' && $profile && $profile->status == 'active'))
+                        @if (Auth::user()->role == 'Admin' || (Auth::user()->role == 'Employer' || Auth::user()->role == 'User' && $profile && $profile->status == 'active'))
                             <!-- Job -->
 
                             <li
@@ -222,7 +222,7 @@
                                             <div data-i18n="Without navbar">Job List</div>
                                         </a>
                                     </li>
-                                    @if (Auth::user()->role == 'User')
+                                    @if (Auth::user()->role == 'User' ||  Auth::user()->role == 'Employer' )
                                         <li class="menu-item {{ Route::is('job.apply') ? 'active' : '' }}">
                                             <a href="{{ route('job.apply') }}" class="menu-link">
                                                 <div data-i18n="Without navbar">Apply Job</div>
@@ -261,7 +261,7 @@
                         @endphp
 
                         {{-- @if ($profile && stripos($profile->location, 'Germany') === false) --}}
-                            <li class="menu-item">
+                            <li class="menu-item d-none">
                                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                                     <i class="menu-icon tf-icons bx bx-cube-alt"></i>
                                     <div data-i18n="Misc">Visa</div>
